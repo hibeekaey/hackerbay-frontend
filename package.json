@@ -1,0 +1,27 @@
+{
+  "name": "frontend",
+  "version": "1.0.0",
+  "description": "HackerBay.io interview",
+  "main": "index.html",
+  "scripts": {
+    "test": "react-scripts test --env=jsdom",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "eject": "react-scripts eject"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hibeekaey/hackerbay-frontend.git"
+  },
+  "author": "Ibukun O. Dairo",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hibeekaey/hackerbay-frontend/issues"
+  },
+  "homepage": "https://github.com/hibeekaey/hackerbay-frontend#readme",
+  "dependencies": {
+    "react": "^16.3.2",
+    "react-dom": "^16.3.2",
+    "react-scripts": "1.1.4"
+  }
+}
