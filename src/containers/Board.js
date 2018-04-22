@@ -5,15 +5,16 @@ import './Board.css';
 import Cell from '../components/Cell';
 
 class Board extends Component {
-  renderCells() {
+  renderCells(row) {
     const length = this.props.width;
     const array = Array(length).fill(null);
-    
+    const rowIndex = row * length;
+
     const cells = array.map((cell, index) => 
       <Cell
-        key={index}
-        value={this.props.cells[index]}
-        onClick={() => this.props.onClick(index)}
+        key={rowIndex + index}
+        value={this.props.cells[rowIndex + index]}
+        onClick={() => this.props.onClick(rowIndex + index)}
       />
     );
 
@@ -25,7 +26,7 @@ class Board extends Component {
     const array = Array(length).fill(null);
     
     const rows = array.map((row, index) => 
-      <div key={index} className="Board-row">{this.renderCells()}</div>
+      <div key={index} className="Board-row">{this.renderCells(index)}</div>
     );
     
     return rows;

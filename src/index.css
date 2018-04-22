@@ -10,11 +10,12 @@ body {
 }
 
 .mushroom {
-  height: 22px;
-  width: 22px;
+  height: 12px;
+  width: 12px;
+  margin: 8px;
 }
 
 .mario {
-  height: 22px;
-  width: 22px;
+  height: 28px;
+  width: 28px;
 }
