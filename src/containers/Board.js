@@ -5,24 +5,8 @@ import './Board.css';
 import Cell from '../components/Cell';
 
 class Board extends Component {
-  renderCells(row) {
-    const length = this.props.width;
-    const array = Array(length).fill(null);
-    const rowIndex = row * length;
-
-    const cells = array.map((cell, index) => 
-      <Cell
-        key={rowIndex + index}
-        value={this.props.cells[rowIndex + index]}
-        onClick={() => this.props.onClick(rowIndex + index)}
-      />
-    );
-
-    return cells;
-  }
-
   renderRows() {
-    const length = this.props.height;
+    const length = this.props.rows;
     const array = Array(length).fill(null);
     
     const rows = array.map((row, index) => 
@@ -30,6 +14,22 @@ class Board extends Component {
     );
     
     return rows;
+  }
+
+  renderCells(row) {
+    const length = this.props.cols;
+    const array = Array(length).fill(null);
+    const rowIndex = row * length;
+
+    const cols = array.map((cell, index) => 
+      <Cell
+        key={rowIndex + index}
+        value={this.props.cells[rowIndex + index]}
+        onClick={() => this.props.onClick(rowIndex + index)}
+      />
+    );
+
+    return cols;
   }
 
   render() {
