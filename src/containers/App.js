@@ -11,22 +11,30 @@ class App extends Component {
     super(props);
 
     this.state = {
-      width: 0,
-      height: 0
+      history: [{
+        cells: Array(0)
+      }]
     };
   }
 
-  handleClick(i) {
+  handleMario(i) {
     const history = this.state.history.slice(0, this.state.moves + 1);
     const current = history[history.length - 1];
     const cells = current.cells.slice();
 
-    let backward = (i === this.state.currentPosition - 1);
-    let forward = (i === this.state.currentPosition + 1);
-    let upward = (i === this.state.currentPosition - this.state.width);
-    let downward = (i == this.state.currentPosition + this.state.width);
+    const back = this.state.currentPosition - 1;
+    const front = this.state.currentPosition + 1;
 
-    if (backward || forward || upward || downward) {
+    const backward = i === back;
+    const notEdgeBackward = (back % this.state.cols) !== this.state.cols - 1;
+    
+    const forward = (i === front);
+    const notEdgeForward = (front % this.state.cols) !== 0;
+    
+    const upward = (i === this.state.currentPosition - this.state.cols);
+    const downward = (i === this.state.currentPosition + this.state.cols);
+
+    if (((backward && notEdgeBackward) || (forward && notEdgeForward) || upward || downward) && i > -1 && i < cells.length) {
       cells[this.state.currentPosition] = null;
       cells[i] = <Mario />;
       
@@ -37,6 +45,18 @@ class App extends Component {
         moves: history.length,
         currentPosition: i
       });
+
+      this.isPrincessSaved();
+    }
+  }
+
+  isPrincessSaved() {
+    const history = this.state.history.slice(0, this.state.moves + 1);
+    const current = history[history.length - 1];
+    const cells = current.cells.slice();
+    
+    if (cells.every((cell) => cell === null || cell.type === (<Mario />).type)) {
+      alert(`Game over. Total moves to save princess: ${this.state.moves}`);
     }
   }
 
@@ -44,41 +64,59 @@ class App extends Component {
     const width = parseInt(prompt('Please enter board Width'), 10) || 0;
     const height = parseInt(prompt('Please enter board Height'), 10) || 0;
 
-    this.setState({
-      history: [{
-        cells: Array(0)
-      }],
-      width: (width > 10 ? 10 : (width < 3 ? 3 : width)),
-      height: (height > 10 ? 10 : (height < 3 ? 3 : height)),
-      moves: 0
-    });
-  }
+    const cols = (width > 10 ? 10 : (width < 3 ? 3 : width));
+    const rows = (height > 10 ? 10 : (height < 3 ? 3 : height));
 
-  componentDidMount() {
-    const history = this.state.history.slice(0, this.state.moves + 1);
-    const totalCells = this.state.width * this.state.height;
+    const totalCells = cols * rows;
 
-    const mushroomCells = Array(Math.max(this.state.width, this.state.height)).fill(null).map(() => Math.round(Math.random() * totalCells));
+    const mushroomLength = Math.max(cols, rows);
+    const mushroomCells = Array(mushroomLength).fill(null).map(() => Math.round(Math.random() * totalCells));
+    
     const marioCell = Math.round(Math.random() * totalCells);
+    
+    const history = this.state.history.slice(0, this.state.moves + 1);
     const cells = Array(totalCells).fill(null);
     
-    mushroomCells.forEach((cell) => {
-      cells[cell] = <Mushroom />;
-    });
+    mushroomCells.forEach((cell) => cells[cell] = <Mushroom />);
 
     cells[marioCell] = <Mario />;
 
     this.setState({
-      history: history.concat([{
+      history: [{
         cells: cells
-      }]),
+      }],
+      cols: cols,
+      rows: rows,
       moves: history.length,
       currentPosition: marioCell
     });
   }
 
-  componentWillUnmount() {
+  componentDidMount() {
+    document.addEventListener('keydown', (event) => {
+      event.preventDefault();
 
+      switch(event.key) {
+      case 'ArrowLeft':
+        this.handleMario(this.state.currentPosition - 1);
+        break;
+      case 'ArrowRight':
+        this.handleMario(this.state.currentPosition + 1);  
+        break;
+      case 'ArrowUp':
+        this.handleMario(this.state.currentPosition - this.state.cols);
+        break;
+      case 'ArrowDown': 
+        this.handleMario(this.state.currentPosition + this.state.cols);
+        break;
+      default:
+        break;
+      }
+    }, false);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('keydown', null);
   }
 
   render() {
@@ -90,10 +128,10 @@ class App extends Component {
         <h1 className="App-title">Mushroom Mario</h1>
         
         <Board
-          width={this.state.width}
-          height={this.state.height}
+          cols={this.state.cols}
+          rows={this.state.rows}
           cells={current.cells}
-          onClick={(i) => this.handleClick(i)}
+          onClick={(i) => this.handleMario(i)}
         />
       </div>
     );
