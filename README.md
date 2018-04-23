@@ -11,7 +11,7 @@ npm install
 npm start
 ```
 
-This will install the necessary dependencies and start the application at <http://localhost:8080.>
+This will install the necessary dependencies and start the application at <http://localhost:3000.>
 
 ## Build Setup
 
